@@ -293,9 +293,11 @@ function OCRCamera() {
           <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
             <button style={btnDanger} onClick={handleReset}>Reset</button>
 
-            <button style={btnPrimary} onClick={extractText} disabled={loading}>
-              {loading ? "Processing..." : "Extract Text"}
-            </button>
+            {!result && !text?.detected &&
+              <button style={btnPrimary} onClick={extractText} disabled={loading}>
+                {loading ? "Processing..." : "Extract Text"}
+              </button>
+            }
           </div>
         </>
       )}
