@@ -1,6 +1,64 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
+const btnPrimary = {
+  background: "#2ecc71",
+  color: "#fff",
+  border: "none",
+  padding: "10px 16px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: 600
+};
+
+const btnSecondary = {
+  background: "#3498db",
+  color: "#fff",
+  padding: "10px 16px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: 600
+};
+
+const btnDanger = {
+  background: "#e74c3c",
+  color: "#fff",
+  border: "none",
+  padding: "10px 16px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: 600
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "8px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
+  marginTop: "5px"
+};
+
+const card = {
+  marginTop: "20px",
+  padding: "15px",
+  borderRadius: "10px",
+  background: "#f9fbfd",
+  border: "1px solid #e1e5ea"
+};
+
+const inputField = (label: string, name: string, value: number) => (
+  <div>
+    <label>{label}</label>
+    <input
+      name={name}
+      type="number"
+      step="0.01"
+      defaultValue={value}
+      style={inputStyle}
+    />
+  </div>
+);
+
 function OCRCamera() {
   const webcamRef = useRef<Webcam | null>(null);
 
@@ -78,111 +136,238 @@ function OCRCamera() {
     setResult(null);
   }
 
+  // return (
+  //   <div style={{ textAlign: "center" }}>
+  //     <h2>OCR Camera + Upload</h2>
+
+  //     {!preview ? (
+  //       <>
+  //         <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
+  //         <br />
+
+  //         <button onClick={capture}>Capture</button>
+
+  //         <div style={{ marginTop: "10px" }}>
+  //           <input type="file" accept="image/*" onChange={handleUpload} />
+  //         </div>
+  //       </>
+  //     ) : (
+  //       <>
+  //         <img src={preview} alt="preview" width="300" />
+  //         <br />
+
+  //         <button onClick={handleReset}>Reset</button>
+  //         <button onClick={extractText} disabled={loading}>
+  //           {loading ? "Processing..." : "Extract Text"}
+  //         </button>
+  //       </>
+  //     )}
+
+  //     {text?.detected && !result ? (
+  //         <div style={{ marginTop: "20px", whiteSpace: "pre-wrap" }}>
+  //           <h3>Extracted Text:</h3>
+  //           <p>N: {text.N}, P: {text.P}, K: {text.K}, pH: {text.pH}</p>
+  //         </div>
+  //       )
+  //       : text?.detected && result ? (
+  //         <div style={{ marginTop: "20px", whiteSpace: "pre-wrap" }}>
+  //           <h3>Input Values:</h3>
+  //           <p>N: {result.input.N}, P: {result.input.P}, K: {result.input.K}, pH: {result.input.pH}</p>
+  //         </div>
+  //       )
+  //       :
+  //       null
+  //     }
+
+  //     {text?.detected && !result && 
+  //       <div>
+  //         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "10px" }}>
+  //           <div>
+  //             <label htmlFor="nitrogen">Nitrogen Content: </label>
+  //             <input name="nitrogen" type="number" step="0.01" placeholder="Enter Nitrogen Content" defaultValue={text.N}/>
+  //           </div>
+
+  //           <div>
+  //             <label htmlFor="phosphorus">Phosphorus Content: </label>
+  //             <input name="phosphorus" type="number" step="0.01" placeholder="Enter Phosphorus Content" defaultValue={text.P}/>
+  //           </div>
+
+  //           <div>
+  //             <label htmlFor="potassium">Potassium Content: </label>
+  //             <input name="potassium" type="number" step="0.01" placeholder="Enter Potassium Content" defaultValue={text.K}/>
+  //           </div>
+
+  //           <div>
+  //             <label htmlFor="ph">pH Content: </label>
+  //             <input name="ph" type="number" step="0.01" placeholder="Enter pH Content" defaultValue={text?.pH}/>
+  //           </div>
+
+  //           <div>
+  //             <label htmlFor="crop">Crop Type: </label>
+  //             <select name="crop">
+  //               <option value="wheat">Wheat</option>
+  //               <option value="rice">Rice</option>
+  //               <option value="cotton">Cotton</option>
+  //               <option value="maize">Maize</option>
+  //             </select><br /><br />
+  //           </div>
+
+  //           <button type="submit">Get Recommendations</button>
+  //         </form>
+  //       </div>
+  //     }
+
+  //     {result && 
+  //       <div>
+  //         <h2>Analysis</h2>
+  //         {result.analysis?.map((item: { nutrient: string; status: string; deficiency: string }, i: number) => (
+  //           <p key={i}>
+  //             {item.nutrient}: {item.status} {item.deficiency && (`(${item.deficiency})`)}
+  //           </p>
+  //         ))}
+
+  //         <h2>Recommendations</h2>
+  //         {result.recommendations?.map((rec: { nutrient: string; suggestions: { name: string; estimated_bags: string; estimated_cost: string }[] }, i: number) => (
+  //           <div key={i}>
+  //             <h4>{rec.nutrient}</h4>
+  //             {rec.suggestions?.map((s: { name: string; estimated_bags: string; estimated_cost: string }, j: number) => (
+  //               <p key={j}>
+  //                 {s.name} - {s.estimated_bags || ""} bags - ₹{s.estimated_cost || ""}
+  //               </p>
+  //             ))}
+  //           </div>
+  //         ))}
+  //       </div>
+  //     }
+  //   </div>
+  // );
+
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>OCR Camera + Upload</h2>
+  <div style={{
+    minHeight: "100vh",
+    background: "#f4f7fb",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px"
+  }}>
+    <div style={{
+      width: "100%",
+      maxWidth: "800px",
+      background: "#ffffff",
+      borderRadius: "12px",
+      padding: "25px",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+    }}>
+      <h2 style={{ textAlign: "center", marginBottom: "20px", color: "#2c3e50" }}>
+        🌱 Mitti Scan
+      </h2>
 
       {!preview ? (
         <>
-          <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
-          <br />
+          <div style={{ borderRadius: "10px", overflow: "hidden", display: "flex", justifyContent: "center" }}>
+            <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
+          </div>
 
-          <button onClick={capture}>Capture</button>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "15px" }}>
+            <button style={btnPrimary} onClick={capture}>Capture</button>
 
-          <div style={{ marginTop: "10px" }}>
-            <input type="file" accept="image/*" onChange={handleUpload} />
+            <label style={btnSecondary}>
+              Upload
+              <input type="file" accept="image/*" onChange={handleUpload} hidden />
+            </label>
           </div>
         </>
       ) : (
         <>
-          <img src={preview} alt="preview" width="300" />
-          <br />
+          <img
+            src={preview}
+            alt="preview"
+            style={{
+              width: "100%",
+              borderRadius: "10px",
+              marginBottom: "15px"
+            }}
+          />
 
-          <button onClick={handleReset}>Reset</button>
-          <button onClick={extractText} disabled={loading}>
-            {loading ? "Processing..." : "Extract Text"}
-          </button>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+            <button style={btnDanger} onClick={handleReset}>Reset</button>
+
+            <button style={btnPrimary} onClick={extractText} disabled={loading}>
+              {loading ? "Processing..." : "Extract Text"}
+            </button>
+          </div>
         </>
       )}
 
-      {text?.detected && !result ? (
-          <div style={{ marginTop: "20px", whiteSpace: "pre-wrap" }}>
-            <h3>Extracted Text:</h3>
-            <p>N: {text.N}, P: {text.P}, K: {text.K}, pH: {text.pH}</p>
-          </div>
-        )
-        : text?.detected && result ? (
-          <div style={{ marginTop: "20px", whiteSpace: "pre-wrap" }}>
-            <h3>Input Values:</h3>
-            <p>N: {result.input.N}, P: {result.input.P}, K: {result.input.K}, pH: {result.input.pH}</p>
-          </div>
-        )
-        :
-        null
-      }
+      {/* Extracted Values */}
+      {text?.detected && !result && (
+        <div style={card}>
+          <h3>Detected Values</h3>
+          <p>N: {text.N} | P: {text.P} | K: {text.K} | pH: {text.pH}</p>
+        </div>
+      )}
 
-      {text?.detected && !result && 
-        <div>
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "10px" }}>
-            <div>
-              <label htmlFor="nitrogen">Nitrogen Content: </label>
-              <input name="nitrogen" type="number" step="0.01" placeholder="Enter Nitrogen Content" defaultValue={text.N}/>
-            </div>
+      {text?.detected && result && (
+        <div style={card}>
+          <h3>Input Values</h3>
+          <p>N: {result.input.N} | P: {result.input.P} | K: {result.input.K} | pH: {result.input.pH}</p>
+        </div>
+      )}
 
-            <div>
-              <label htmlFor="phosphorus">Phosphorus Content: </label>
-              <input name="phosphorus" type="number" step="0.01" placeholder="Enter Phosphorus Content" defaultValue={text.P}/>
-            </div>
+      {/* Form */}
+      {text?.detected && !result && (
+        <div style={card}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+
+            {inputField("Nitrogen", "nitrogen", text.N)}
+            {inputField("Phosphorus", "phosphorus", text.P)}
+            {inputField("Potassium", "potassium", text.K)}
+            {inputField("pH", "ph", text.pH)}
 
             <div>
-              <label htmlFor="potassium">Potassium Content: </label>
-              <input name="potassium" type="number" step="0.01" placeholder="Enter Potassium Content" defaultValue={text.K}/>
-            </div>
-
-            <div>
-              <label htmlFor="ph">pH Content: </label>
-              <input name="ph" type="number" step="0.01" placeholder="Enter pH Content" defaultValue={text?.pH}/>
-            </div>
-
-            <div>
-              <label htmlFor="crop">Crop Type: </label>
-              <select name="crop">
+              <label>Crop Type</label>
+              <select name="crop" style={inputStyle}>
                 <option value="wheat">Wheat</option>
                 <option value="rice">Rice</option>
                 <option value="cotton">Cotton</option>
                 <option value="maize">Maize</option>
-              </select><br /><br />
+              </select>
             </div>
 
-            <button type="submit">Get Recommendations</button>
+            <button type="submit" style={btnPrimary}>
+              Get Recommendations
+            </button>
           </form>
         </div>
-      }
+      )}
 
-      {result && 
-        <div>
+      {/* Results */}
+      {result && (
+        <div style={card}>
           <h2>Analysis</h2>
-          {result.analysis?.map((item: { nutrient: string; status: string; deficiency: string }, i: number) => (
+          {result.analysis?.map((item, i) => (
             <p key={i}>
-              {item.nutrient}: {item.status} {item.deficiency && (`(${item.deficiency})`)}
+              <strong>{item.nutrient}</strong>: {item.status} {item.deficiency && `(${item.deficiency})`}
             </p>
           ))}
 
-          <h2>Recommendations</h2>
-          {result.recommendations?.map((rec: { nutrient: string; suggestions: { name: string; estimated_bags: string; estimated_cost: string }[] }, i: number) => (
-            <div key={i}>
+          <h2 style={{ marginTop: "20px" }}>Recommendations</h2>
+          {result.recommendations?.map((rec, i) => (
+            <div key={i} style={{ marginBottom: "10px" }}>
               <h4>{rec.nutrient}</h4>
-              {rec.suggestions?.map((s: { name: string; estimated_bags: string; estimated_cost: string }, j: number) => (
+              {rec.suggestions?.map((s, j) => (
                 <p key={j}>
-                  {s.name} - {s.estimated_bags || ""} bags - ₹{s.estimated_cost || ""}
+                  {s.name} — {s.estimated_bags || ""} bags — ₹{s.estimated_cost || ""}
                 </p>
               ))}
             </div>
           ))}
         </div>
-      }
+      )}
     </div>
-  );
+  </div>
+);
 }
 
 export default OCRCamera;
