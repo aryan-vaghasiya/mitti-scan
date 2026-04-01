@@ -1,0 +1,1 @@
+Mitti Scan monorepo with Google Cloud Vision API for OCR of Soil Health Card and hard coded logic for fertilizer recommendations
