@@ -1,0 +1,4 @@
+node_modules
+dist
+vision-api.json
+.env

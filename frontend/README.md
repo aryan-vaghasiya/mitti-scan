@@ -1,0 +1,1 @@
+Trial OCR with image capture/uploaded image with Google Cloud Vision API

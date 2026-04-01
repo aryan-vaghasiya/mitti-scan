@@ -1,0 +1,1 @@
+Trial Backend with soil values extraction from Google Vision API and basic fertilizer recommendations
