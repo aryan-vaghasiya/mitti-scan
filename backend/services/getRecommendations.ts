@@ -23,7 +23,7 @@ function recommendations(N: number, P: number, K: number, pH: number, crop: stri
     analysis.push({
         nutrient: "Nitrogen",
         status: N < ideal.N ? "Low" : "Normal",
-        deficiency: nDef + "%"
+        deficiency: nDef? nDef + "%" : ""
     });
     if (N === null) {
         analysis.push({
@@ -44,7 +44,7 @@ function recommendations(N: number, P: number, K: number, pH: number, crop: stri
     analysis.push({
         nutrient: "Phosphorus",
         status: P < ideal.P ? "Low" : "Normal",
-        deficiency: pDef + "%"
+        deficiency: pDef? pDef + "%" : ""
     });
     if (P === null) {
         analysis.push({
@@ -66,7 +66,7 @@ function recommendations(N: number, P: number, K: number, pH: number, crop: stri
     analysis.push({
         nutrient: "Potassium",
         status: K < ideal.K ? "Low" : "Normal",
-        deficiency: kDef + "%"
+        deficiency: kDef? kDef + "%" : ""
     });
 
     if (K === null) {
