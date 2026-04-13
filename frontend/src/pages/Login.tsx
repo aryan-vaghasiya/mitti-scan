@@ -1,21 +1,72 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
+
+const API_URL = import.meta.env.VITE_API_SERVER;
 
 export default function Login() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [step, setStep] = useState<1 | 2>(1);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const [loading, setLoading] = useState<boolean>(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleSendOTP = (e: React.FormEvent) => {
+  const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(2);
-    setTimeout(() => inputRefs.current[0]?.focus(), 100);
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/auth/login-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || "Failed to send OTP");
+      // }
+      const data = await response.json();
+      console.log("OTP sent successfully: ", data);
+      setStep(2);
+      setTimeout(() => inputRefs.current[0]?.focus(), 100);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
-  const handleVerifyOTP = (e: React.FormEvent) => {
+  const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     const finalOtp = otp.join("");
     console.log("Verifying OTP:", finalOtp, "for", email);
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/auth/verify-login-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: finalOtp })
+      });
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || "Failed to verify OTP");
+      // }
+      if(response.ok){
+        const data = await response.json();
+        dispatch(setCredentials({ token: data.token, user: data.user }));
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error verifying Login OTP:", error);
+    }
+    setLoading(false);
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -64,6 +115,7 @@ export default function Login() {
               />
             </div>
             <button
+              disabled={loading}
               type="submit"
               className="w-full bg-[#27b755] hover:bg-[#1f9645] text-white font-semibold py-3 rounded-xl transition-colors shadow-sm"
             >
@@ -103,6 +155,7 @@ export default function Login() {
             </div>
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors shadow-sm"
             >
               Verify & Login

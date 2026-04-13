@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { type NutrientData, type RecommendationResult } from "../types";
-import CameraSection from "./CameraSection";
-import NutrientForm from "./NutrientForm";
-import AnalysisResults from "./AnalysisResults";
+import CameraSection from "../components/CameraSection";
+import NutrientForm from "../components/NutrientForm";
+import AnalysisResults from "../components/AnalysisResults";
+const API_URL = import.meta.env.VITE_API_SERVER;
 
-export default function OCRCamera() {
+export default function Scanner() {
   const webcamRef = useRef<Webcam | null>(null);
 
   const [preview, setPreview] = useState<string | null | undefined>(null);
@@ -47,8 +48,11 @@ export default function OCRCamera() {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-      const res = await fetch("http://localhost:3000/ocr", {
+      const res = await fetch(`${API_URL}/ocr`, {
         method: "POST",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token") || ""}`
+        },
         body: formData,
       });
 
@@ -69,7 +73,11 @@ export default function OCRCamera() {
     const searchParams = new URLSearchParams(formData as any);
 
     try {
-      const res = await fetch(`http://localhost:3000/recommendations?${searchParams.toString()}`);
+      const res = await fetch(`${API_URL}/recommendations?${searchParams.toString()}`,{
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token") || ""}`
+        }
+      });
       const data = await res.json();
       console.log(data)
       setResult(data.recommendations);

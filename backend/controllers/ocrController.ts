@@ -8,6 +8,7 @@ const client = new ImageAnnotatorClient({
 const ocrController = async (req: Request, res: Response) => {
   try {
     const imageBuffer = req.file.buffer;
+    const user = req.user;
 
     const [result] = await client.documentTextDetection(imageBuffer);
     const fullTextAnnotation = result.fullTextAnnotation;

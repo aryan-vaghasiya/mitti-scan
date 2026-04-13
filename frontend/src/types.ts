@@ -3,6 +3,8 @@ export interface NutrientData {
   P: number;
   K: number;
   pH: number;
+  crop: string;
+  farmSize?: number;
   detected?: boolean;
 }
 
@@ -19,4 +21,14 @@ export interface RecommendationResult {
     nutrient: string;
     suggestions: Suggestion[];
   }[];
+}
+
+export interface ScanHistoryItem {
+  _id: string;
+  createdAt: string;
+  cropType: string;
+  landSize: { value: number; unit: string };
+  extractedData: { N: number; P: number; K: number; pH: number };
+  analysis: { nutrient: string; status: string; deficiencyPercentage: number }[];
+  recommendations: { productName: string; estimatedBags: number; estimatedCost: number }[];
 }

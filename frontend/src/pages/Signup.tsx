@@ -1,22 +1,75 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
+
+const API_URL = import.meta.env.VITE_API_SERVER;
 
 export default function Signup() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [step, setStep] = useState<1 | 2>(1);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const [loading, setLoading] = useState<boolean>(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleSendOTP = (e: React.FormEvent) => {
+  const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(2);
-    setTimeout(() => inputRefs.current[0]?.focus(), 100);
+    setLoading(true);
+    console.log("Requesting OTP for:", name, email);
+    console.log(JSON.stringify({ name, email }));
+    try {
+      const response = await fetch(`${API_URL}/auth/signup-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email })
+      });
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || "Failed to send OTP");
+      // }
+
+      const data = await response.json();
+      console.log("OTP sent successfully: ", data);
+
+      setStep(2);
+      setTimeout(() => inputRefs.current[0]?.focus(), 100);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
-  const handleVerifyOTP = (e: React.FormEvent) => {
+  const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const finalOtp = otp.join("");
-    console.log("Creating account for:", name, email, "with OTP:", finalOtp);
+    try {
+      const response = await fetch(`${API_URL}/auth/verify-signup-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: finalOtp, name })
+      });
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || "Failed to verify OTP");
+      // }
+      if(response.ok){
+        const data = await response.json();
+        dispatch(setCredentials({ token: data.token, user: data.user }));
+        console.log("OTP verified successfully: ", data);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -77,6 +130,7 @@ export default function Signup() {
               />
             </div>
             <button
+              disabled={loading}
               type="submit"
               className="w-full bg-[#27b755] hover:bg-[#1f9645] text-white font-semibold py-3 rounded-xl transition-colors shadow-sm mt-2"
             >
@@ -113,16 +167,20 @@ export default function Signup() {
                 />
               ))}
             </div>
-            
+
             <button
               type="button"
-              onClick={() => setStep(1)}
+              onClick={() => {
+                setStep(1)
+                setOtp(["", "", "", ""])
+              }}
               className="text-sm text-[#27b755] hover:text-[#1f9645] w-full text-center mt-2 font-medium transition-colors"
             >
               Edit Details
             </button>
             
             <button
+
               type="submit"
               className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors shadow-sm"
             >

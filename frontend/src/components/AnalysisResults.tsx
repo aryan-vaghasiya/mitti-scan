@@ -11,7 +11,7 @@ export default function AnalysisResults({ result }: AnalysisResultsProps) {
       <div className="p-5 rounded-xl bg-gray-50 border border-gray-200 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Input Values</h3>
         <p className="text-gray-600 font-medium">
-          N: {result.input.N} | P: {result.input.P} | K: {result.input.K} | pH: {result.input.pH}
+          N: {result.input.N} | P: {result.input.P} | K: {result.input.K} | pH: {result.input.pH} | Crop: {result.input.crop} | Farm Size: {result.input.farmSize ?? 1} hectares
         </p>
       </div>
 

@@ -30,6 +30,17 @@ export default function NutrientForm({ initialData, onSubmit }: NutrientFormProp
         <InputField label="pH" name="ph" defaultValue={initialData.pH} />
 
         <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">Farm Size (in hectares)</label>
+          <input
+            name="size"
+            type="number"
+            step="0.01"
+            defaultValue={1}
+            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-400 focus:border-transparent outline-none transition-all"
+          />
+        </div>
+
+        <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-700 mb-1">Crop Type</label>
           <select 
             name="crop" 
